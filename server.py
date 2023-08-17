@@ -1,6 +1,6 @@
 from flask import Flask, redirect, request, jsonify, Response
+from flask_cors import CORS
 import requests
-import jwt
 import os
 import base64
 from urllib.parse import urlencode
@@ -8,6 +8,7 @@ import dotenv
 dotenv.load_dotenv()
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Spotify Configuration
 redirect_uri = os.getenv('SPOTIFY_REDIRECT_URI')
@@ -16,6 +17,12 @@ client_secret = os.getenv('SPOTIFY_CLIENT_SECRET')
 
 
 token_key = ''  # This seems to be a security key for your /token endpoint
+
+
+@app.route('/', methods=['GET'])
+def home():
+    return "Home route"
+
 
 @app.route('/test', methods=['GET'])
 def test():
@@ -34,6 +41,7 @@ def login():
 
 @app.route('/callback', methods=['GET'])
 def callback():
+    print("Callback route")
     code = request.args.get('code')
     auth_data = {
         'code': code,
@@ -44,7 +52,9 @@ def callback():
         'Authorization': 'Basic ' + base64.b64encode(f"{client_id}:{client_secret}".encode()).decode()
     }
     res = requests.post('https://accounts.spotify.com/api/token', data=auth_data, headers=headers)
+    print(res.json())
     access_token = res.json().get('access_token')
+    print(access_token)
     uri = os.getenv('FRONTEND_URI', 'http://localhost:3000/playlist')
     return redirect(f"{uri}?access_token={access_token}")
 
@@ -72,6 +82,6 @@ def get_spotify_playlists():
 
 
 if __name__ == '__main__':
-    port = int(os.getenv('PORT', 8888))
+    port = int(os.getenv('PORT', 8000))
     print(f"Listening on port {port} ")
-    app.run(port=port)
+    app.run(port=port, host='localhost')

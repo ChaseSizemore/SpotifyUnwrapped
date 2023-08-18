@@ -40,25 +40,6 @@ def login():
     url = 'https://accounts.spotify.com/authorize?' + urlencode(query_parameters)
     return redirect(url)
 
-# @app.route('/callback', methods=['GET'])
-# def callback():
-#     print("Callback route")
-#     code = request.args.get('code')
-#     auth_data = {
-#         'code': code,
-#         'redirect_uri': redirect_uri,
-#         'grant_type': 'authorization_code'
-#     }
-#     headers = {
-#         'Authorization': 'Basic ' + base64.b64encode(f"{client_id}:{client_secret}".encode()).decode()
-#     }
-#     res = requests.post('https://accounts.spotify.com/api/token', data=auth_data, headers=headers)
-#     print(res.json())
-#     access_token = res.json().get('access_token')
-#     print(access_token)
-#     uri = os.getenv('FRONTEND_URI', 'http://localhost:3000/playlist')
-#     return redirect(f"{uri}?access_token={access_token}")
-
 @app.route('/callback', methods=['GET'])
 def callback():
     # print("Callback route")
@@ -97,19 +78,6 @@ def get_spotify_playlists():
     }
     response = requests.get('https://api.spotify.com/v1/me/playlists', headers=headers)
     return jsonify(response.json())
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 8000))

@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
+import ArtistTile from './ArtistTile';
+import TracksTile from './TracksTile';
+import NavBar from './NavBar';
+
 interface User {
   country: string;
   display_name: string;
@@ -18,18 +22,7 @@ interface User {
 const Main = () => {
   const initialCookieValue = Cookies.get('spotify_access_token');
   const [cookie, setCookie] = useState<string | undefined>(initialCookieValue);
-  const [userInfo, setUserInfo] = useState<User>({
-    country: '',
-    display_name: '',
-    email: '',
-    followers: '',
-    href: '',
-    id: '',
-    images: '',
-    product: '',
-    type: '',
-    uri: '',
-  });
+  const [userInfo, setUserInfo] = useState<User>({ country: '', display_name: '', email: '', followers: '', href: '', id: '', images: '', product: '', type: '', uri: '',});
   const [TopTracks, setTopTracks] = useState<any>(null);
   const [TopArtists, setTopArtists] = useState<any>(null);
 
@@ -90,7 +83,6 @@ const Main = () => {
       console.error(error);
     }
   };
-
   useEffect(() => {
     if (cookie) {
       getUserInfo();
@@ -101,10 +93,33 @@ const Main = () => {
 
   return (
     <>
-      <h1>Main</h1>
-      <h1>{userInfo ? userInfo.display_name : 'Loading...'}</h1>
-      <h1>{TopTracks ? TopTracks.items[0].preview_url : 'Loading...'}</h1>
-      <h1>{TopArtists ? TopArtists.items[0].name : 'Loading...'}</h1>
+      <NavBar />
+      <div className='flex flex-row'>
+        <div className="">
+          {TopArtists
+            ? TopArtists.items.map((artist: any, id: number) => (
+                <ArtistTile
+                  artist={artist.name}
+                  genres={artist.genres}
+                  image={artist.images[0].url}
+                  id={id + 1}
+                />
+              ))
+            : 'Loading...'}
+        </div>
+        <div className="">
+          {TopTracks
+            ? TopTracks.items.map((track: any, id: number) => (
+                <TracksTile
+                  track = {track.name}
+                  artist = {track.artists[0].name}
+                  image = {track.album.images[0].url}
+                  id={id + 1}
+                />
+              ))
+            : 'Loading...'}
+        </div>
+      </div>
     </>
   );
 };

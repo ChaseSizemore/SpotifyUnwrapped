@@ -1,4 +1,4 @@
-from flask import Flask, redirect, request, jsonify, Response
+from flask import Flask, redirect, request, jsonify, Response, make_response
 from flask_cors import CORS
 import requests
 import os
@@ -8,6 +8,7 @@ import dotenv
 dotenv.load_dotenv()
 
 app = Flask(__name__)
+app.debug = True
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Spotify Configuration
@@ -33,15 +34,34 @@ def login():
     query_parameters = {
         'response_type': 'code',
         'client_id': client_id,
-        'scope': 'user-read-private user-read-email user-library-read',
+        'scope': 'user-read-private user-read-email user-library-read user-top-read playlist-read-private playlist-read-collaborative',
         'redirect_uri': redirect_uri
     }
     url = 'https://accounts.spotify.com/authorize?' + urlencode(query_parameters)
     return redirect(url)
 
+# @app.route('/callback', methods=['GET'])
+# def callback():
+#     print("Callback route")
+#     code = request.args.get('code')
+#     auth_data = {
+#         'code': code,
+#         'redirect_uri': redirect_uri,
+#         'grant_type': 'authorization_code'
+#     }
+#     headers = {
+#         'Authorization': 'Basic ' + base64.b64encode(f"{client_id}:{client_secret}".encode()).decode()
+#     }
+#     res = requests.post('https://accounts.spotify.com/api/token', data=auth_data, headers=headers)
+#     print(res.json())
+#     access_token = res.json().get('access_token')
+#     print(access_token)
+#     uri = os.getenv('FRONTEND_URI', 'http://localhost:3000/playlist')
+#     return redirect(f"{uri}?access_token={access_token}")
+
 @app.route('/callback', methods=['GET'])
 def callback():
-    print("Callback route")
+    # print("Callback route")
     code = request.args.get('code')
     auth_data = {
         'code': code,
@@ -52,12 +72,21 @@ def callback():
         'Authorization': 'Basic ' + base64.b64encode(f"{client_id}:{client_secret}".encode()).decode()
     }
     res = requests.post('https://accounts.spotify.com/api/token', data=auth_data, headers=headers)
-    print(res.json())
+    # print(res.json())
     access_token = res.json().get('access_token')
-    print(access_token)
-    uri = os.getenv('FRONTEND_URI', 'http://localhost:3000/playlist')
-    return redirect(f"{uri}?access_token={access_token}")
+    # print(access_token)
+    
+    # Redirecting to the frontend app
+    redirect_url = os.getenv('FRONTEND_URI', 'http://localhost:3000/main')
+    
+    # Create a response that redirects user
+    response = make_response(redirect(redirect_url))
+    
+    # Set the access token as a cookie in the response
+    # Here, the cookie is set to expire in 3600 seconds (1 hour). Adjust this value based on the token's actual expiration, if needed.
+    response.set_cookie('spotify_access_token', access_token, max_age=3600, secure=True, httponly=False, samesite='Lax')
 
+    return response
 
 @app.route('/get_spotify_playlists', methods=['GET'])
 def get_spotify_playlists():

@@ -40,17 +40,7 @@ const Playlist = () => {
 
   return (
     <>
-      <h1>Playlist</h1>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <ul>
-          {playlists.items.map((playlist:any) => (
-            <li key={playlist.id}>{playlist.name}</li>
-          ))}
-        </ul>
-      )}
-
+      <h1>Playlists</h1>
     </>
   );
 };

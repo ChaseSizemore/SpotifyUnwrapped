@@ -102,7 +102,6 @@ const Main = () => {
   return (
     <>
       <h1>Main</h1>
-      <h1>{cookie}</h1>
       <h1>{userInfo ? userInfo.display_name : 'Loading...'}</h1>
       <h1>{TopTracks ? TopTracks.items[0].preview_url : 'Loading...'}</h1>
       <h1>{TopArtists ? TopArtists.items[0].name : 'Loading...'}</h1>

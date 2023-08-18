@@ -14,8 +14,8 @@ const NavBar = () => {
   };
 
   const logout = () => {
-    window.location.href = "https://www.spotify.com/logout/";
     Cookies.remove('spotify_access_token');
+    window.location.href = "https://www.spotify.com/logout/";
 
   };
 

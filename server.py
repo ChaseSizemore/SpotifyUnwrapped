@@ -86,6 +86,7 @@ def callback():
     # Here, the cookie is set to expire in 3600 seconds (1 hour). Adjust this value based on the token's actual expiration, if needed.
     response.set_cookie('spotify_access_token', access_token, max_age=3600, secure=True, httponly=False, samesite='Lax')
 
+
     return response
 
 @app.route('/get_spotify_playlists', methods=['GET'])

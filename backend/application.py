@@ -23,7 +23,7 @@ def home():
 
 @application.route('/test', methods=['GET'])
 def test():
-    return "Test successful"
+    return "Client Id: " + client_id + " Client Secret: " + client_secret
 
 @application.route('/login', methods=['GET'])
 def login():

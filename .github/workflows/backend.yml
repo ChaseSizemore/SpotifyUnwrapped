@@ -1,0 +1,40 @@
+name: Deploy to AWS Elastic Beanstalk
+
+on:
+  push:
+    branches:
+      - main  # Set your branch name here
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11  # Set your Python version here
+
+    - name: Install dependencies
+      run: |
+        cd backend
+        pip install -r requirements.txt
+
+    - name: Zip the code
+      run: |
+        cd backend
+        zip -r deploy.zip . -x '*.git*'
+
+    - name: Deploy to Elastic Beanstalk
+      uses: einaregilsson/beanstalk-deploy@v14
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: SpotifyUnwrapped  # Set your application name here
+        environment_name: SpotifyUnwrapped-env  # Set your environment name here
+        version_label: github-${{ github.run_id }}
+        region: us-east-1  # Set your AWS region here
+        deployment_package: backend/deploy.zip

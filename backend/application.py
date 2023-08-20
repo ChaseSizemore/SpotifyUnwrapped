@@ -18,15 +18,17 @@ client_secret = os.getenv('SPOTIFY_CLIENT_SECRET')
 
 @application.route('/', methods=['GET'])
 def home():
-    return "Home route test"
+    return "Spotify Unwrapped API"
 
 
 @application.route('/test', methods=['GET'])
 def test():
-    return "Client Id: " + client_id + " Client Secret: " + client_secret
+    return "Client Id: " + client_id + " Client Secret: " + client_secret + " Redirect URI: " + redirect_uri
 
 @application.route('/login', methods=['GET'])
 def login():
+    print("Login route")
+    print(redirect_uri)
     query_parameters = {
         'response_type': 'code',
         'client_id': client_id,
@@ -37,6 +39,7 @@ def login():
 
 @application.route('/callback', methods=['GET'])
 def callback():
+    print("Callback route")
     code = request.args.get('code')
     auth_data = {
         'code': code,

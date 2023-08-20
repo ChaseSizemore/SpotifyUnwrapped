@@ -4,7 +4,10 @@ import axios from 'axios';
 const Login = () => {
   const spotifyAuth = () => {
     // window.location.replace('http://localhost:8000/login');
-    window.location.replace('http://spotifyunwrapped-env.eba-fnpwcr3p.us-east-1.elasticbeanstalk.com/login');
+    // window.location.replace('http://spotifyunwrapped-env.eba-fnpwcr3p.us-east-1.elasticbeanstalk.com/login');
+    const authURL = process.env.AUTH_URL || 'http://spotifyunwrapped-env.eba-fnpwcr3p.us-east-1.elasticbeanstalk.com/login';
+    window.location.replace(authURL);
+
   };
   
   return (

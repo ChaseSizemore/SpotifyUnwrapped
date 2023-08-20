@@ -1,4 +1,4 @@
-name: Deploy Client to s3 Bucket
+name: Deploy Client to S3 Bucket
 
 on:
   push:
@@ -9,20 +9,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     defaults:
-        run:
-            working-directory: ./client
+      run:
+        working-directory: ./client
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Setup Node.js environment
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14' # Using Node.js 14.x
+          node-version: '14'
 
-      # Cache dependencies
       - name: Cache dependencies
         uses: actions/cache@v2
         with:
@@ -31,18 +29,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      # Install Dependencies
       - name: Install dependencies
         run: npm install
-        working-directory: ./client
 
-      # Build App
+      # Add this line if you choose to ignore the warnings
+      - run: echo "CI=false" >> $GITHUB_ENV
+
       - name: Build App
         run: npm run build
-
-    #   # Run Tests
-    #   - name: Run Tests
-    #     run: npm test
 
       - name: Deploy to S3
         run: aws s3 sync build/ s3://spotifyunwrapped

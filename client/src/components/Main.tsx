@@ -105,6 +105,7 @@ const Main = () => {
       Cookies.set('spotify_access_token', accessToken); // optional, if you want to set it in Cookies as well
     }
   };
+  
   useEffect(() => {
     getParamsAndSetCookie();
   }, []);

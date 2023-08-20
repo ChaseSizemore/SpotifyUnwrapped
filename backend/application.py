@@ -56,6 +56,10 @@ def callback():
     # response.set_cookie('spotify_access_token', access_token, max_age=3600)
     return response
 
+# @application.route('/login2', methods=['GET'])
+# def login2():
+#     pass
+# for when soundcloud api is open again
     
 
 if __name__ == '__main__':

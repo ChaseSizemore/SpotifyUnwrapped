@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { useLocation } from 'react-router-dom';
 
 import ArtistTile from './ArtistTile';
 import TracksTile from './TracksTile';
@@ -20,15 +21,27 @@ interface User {
 }
 
 const Main = () => {
+  const location = useLocation();
   const initialCookieValue = Cookies.get('spotify_access_token');
   const [cookie, setCookie] = useState<string | undefined>(initialCookieValue);
-  const [userInfo, setUserInfo] = useState<User>({ country: '', display_name: '', email: '', followers: '', href: '', id: '', images: '', product: '', type: '', uri: '',});
+  const [userInfo, setUserInfo] = useState<User>({
+    country: '',
+    display_name: '',
+    email: '',
+    followers: '',
+    href: '',
+    id: '',
+    images: '',
+    product: '',
+    type: '',
+    uri: '',
+  });
   const [TopTracks, setTopTracks] = useState<any>(null);
   const [TopArtists, setTopArtists] = useState<any>(null);
 
   const getUserInfo = async () => {
     try {
-      console.log('getUserInfo Function')
+      console.log('getUserInfo Function');
       const response = await axios.get('https://api.spotify.com/v1/me', {
         headers: {
           Authorization: `Bearer ${cookie}`,
@@ -84,6 +97,19 @@ const Main = () => {
       console.error(error);
     }
   };
+  const getParamsAndSetCookie = () => {
+    const urlParams = new URLSearchParams(location.search);
+    const accessToken = urlParams.get('access_token');
+    if (accessToken) {
+      setCookie(accessToken);
+      Cookies.set('spotify_access_token', accessToken); // optional, if you want to set it in Cookies as well
+    }
+  };
+  useEffect(() => {
+    getParamsAndSetCookie();
+  }, []);
+
+  // This runs when `cookie` changes
   useEffect(() => {
     if (cookie) {
       getUserInfo();
@@ -95,7 +121,7 @@ const Main = () => {
   return (
     <>
       <NavBar />
-      <div className='flex flex-row'>
+      <div className="flex flex-row">
         <div className="">
           {TopArtists
             ? TopArtists.items.map((artist: any, id: number) => (
@@ -112,9 +138,9 @@ const Main = () => {
           {TopTracks
             ? TopTracks.items.map((track: any, id: number) => (
                 <TracksTile
-                  track = {track.name}
-                  artist = {track.artists[0].name}
-                  image = {track.album.images[0].url}
+                  track={track.name}
+                  artist={track.artists[0].name}
+                  image={track.album.images[0].url}
                   id={id + 1}
                 />
               ))

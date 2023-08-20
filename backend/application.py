@@ -51,8 +51,9 @@ def callback():
     res = requests.post('https://accounts.spotify.com/api/token', data=auth_data, headers=headers)
     access_token = res.json().get('access_token')
     redirect_url = os.getenv('FRONTEND_URI', 'http://localhost:3000/main') # Redirecting to the frontend application
+    redirect_url += '?access_token=' + access_token
     response = make_response(redirect(redirect_url)) # Create a response that redirects user
-    response.set_cookie('spotify_access_token', access_token, max_age=3600)
+    # response.set_cookie('spotify_access_token', access_token, max_age=3600)
     return response
 
     

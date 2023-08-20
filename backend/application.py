@@ -9,8 +9,8 @@ dotenv.load_dotenv()
 
 application = Flask(__name__)
 application.debug = True
-CORS(application, resources={r"/*": {"origins": "*"}})
-# CORS(application, resources={r"/*": {"origins": "http://spotifyunwrapped.s3-website-us-east-1.amazonaws.com/"}}, supports_credentials=True)
+# CORS(application, resources={r"/*": {"origins": "*"}})
+CORS(application, resources={r"/*": {"origins": "http://spotifyunwrapped.s3-website-us-east-1.amazonaws.com/"}}, supports_credentials=True)
 
 
 # Spotify Configuration

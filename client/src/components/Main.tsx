@@ -28,6 +28,7 @@ const Main = () => {
 
   const getUserInfo = async () => {
     try {
+      console.log('getUserInfo Function')
       const response = await axios.get('https://api.spotify.com/v1/me', {
         headers: {
           Authorization: `Bearer ${cookie}`,

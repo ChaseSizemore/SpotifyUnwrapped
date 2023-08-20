@@ -9,8 +9,8 @@ dotenv.load_dotenv()
 
 application = Flask(__name__)
 application.debug = True
-# CORS(application, resources={r"/*": {"origins": "*"}})
-CORS(application, resources={r"/*": {"origins": "http://spotifyunwrapped.s3-website-us-east-1.amazonaws.com/"}}, supports_credentials=True)
+CORS(application, resources={r"/*": {"origins": "*"}})
+# CORS(application, resources={r"/*": {"origins": "http://spotifyunwrapped.s3-website-us-east-1.amazonaws.com/"}}, supports_credentials=True)
 
 
 # Spotify Configuration
@@ -52,7 +52,7 @@ def callback():
     access_token = res.json().get('access_token')
     redirect_url = os.getenv('FRONTEND_URI', 'http://localhost:3000/main') # Redirecting to the frontend application
     response = make_response(redirect(redirect_url)) # Create a response that redirects user
-    response.set_cookie('spotify_access_token', access_token, max_age=3600, secure=False, httponly=False, samesite='None')
+    response.set_cookie('spotify_access_token', access_token, max_age=3600)
     return response
 
     

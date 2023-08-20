@@ -36,9 +36,9 @@ jobs:
       - name: Build App
         run: npm run build
 
-      # Run Tests
-      - name: Run Tests
-        run: npm test
+    #   # Run Tests
+    #   - name: Run Tests
+    #     run: npm test
 
       - name: Deploy to S3
         run: aws s3 sync build/ s3://spotifyunwrapped

@@ -105,7 +105,7 @@ const Main = () => {
       Cookies.set('spotify_access_token', accessToken); // optional, if you want to set it in Cookies as well
     }
   };
-  
+
   useEffect(() => {
     getParamsAndSetCookie();
   }, []);
@@ -121,9 +121,12 @@ const Main = () => {
 
   return (
     <>
-      <NavBar />
-      <div className="flex flex-row">
-        <div className="">
+      <NavBar/>
+      <div className="flex flex-wrap justify-center">
+        <div className="w-full sm:w-1/2 lg:w-1/3">
+          <div className="text-center">
+            <h1 className="text-2xl font-semibold mb-4">Top Artists</h1>
+          </div>
           {TopArtists
             ? TopArtists.items.map((artist: any, id: number) => (
                 <ArtistTile
@@ -135,7 +138,10 @@ const Main = () => {
               ))
             : 'Loading...'}
         </div>
-        <div className="">
+        <div className="w-full sm:w-1/2 lg:w-1/3">
+          <div className="text-center">
+            <h1 className="text-2xl font-semibold mb-4">Top Tracks</h1>
+          </div>
           {TopTracks
             ? TopTracks.items.map((track: any, id: number) => (
                 <TracksTile
@@ -150,6 +156,7 @@ const Main = () => {
       </div>
     </>
   );
+  
 };
 
 export default Main;

@@ -4,40 +4,45 @@ import Cookies from 'js-cookie';
 
 import NavBar from './NavBar';
 
+type TimeRange = 'short' | 'medium' | 'long';
+
 const Playlist = () => {
   const initialCookieValue = Cookies.get('spotify_access_token');
   const [cookie, setCookie] = useState<string | undefined>(initialCookieValue);
   const [playlists, setPlaylists] = useState([]);
-  const [playlistIds, setPlaylistIds] = useState<any>([]); //This state stores all selected playlist ids
+  const [playlistIds, setPlaylistIds] = useState<any>([]); //This state stores all selected playlist ids ot be transfered. functionality is currently down due to soundcloud API
 
-  const getPlaylists = async () => {
+  const getRequestURL = (length: TimeRange): string => {
+    const timeRanges: Record<TimeRange, string> = {short: 'short_term', medium: 'medium_term', long: 'long_term',};
+    const baseUrl = 'https://api.spotify.com/v1/me/playlists?limit=50';
+    const timeRange = timeRanges[length];
+    return timeRange ? `${baseUrl}&time_range=${timeRange}` : baseUrl;
+  };
+
+  const getPlaylists = async (length: TimeRange) => {
+    const requestURL = getRequestURL(length);
+    console.log(requestURL)
+
     try {
-      const response = await axios.get(
-        'https://api.spotify.com/v1/me/playlists',
-        {
-          headers: {
-            Authorization: `Bearer ${cookie}`,
-          },
-        }
-      );
-      console.log(response.data);
+      const response = await axios.get(requestURL, {
+        headers: {Authorization: `Bearer ${cookie}`,},
+      });
+      console.log('response:', response);
+      console.log('request:', response.data);
       setPlaylists(response.data.items);
     } catch (error) {
       console.error(error);
     }
   };
-
   const addPlaylistId = (id: string): void => {
     setPlaylistIds([...playlistIds, id]);
   };
-
   const removePlaylistId = (id: string): void => {
     const newPlaylistIds = playlistIds.filter((playlistId: string) => {
       return playlistId !== id;
     });
     setPlaylistIds(newPlaylistIds);
   };
-
   const handleToggleChange = (id: string, isChecked: boolean): void => {
     console.log(id, isChecked);
     if (isChecked) {
@@ -46,17 +51,17 @@ const Playlist = () => {
       removePlaylistId(id);
     }
   };
-  const handleTransfer = async () => {
-    
-  };
+  const handleTransfer = async () => {};
 
   useEffect(() => {
     console.log(playlistIds);
+    console.log('in use effect - playlist ID')
   }, [playlistIds]);
 
   useEffect(() => {
     if (cookie) {
-      getPlaylists();
+      console.log('in use effect - cookie')
+      getPlaylists('medium');
     }
   }, [cookie]);
   return (
@@ -65,6 +70,9 @@ const Playlist = () => {
       <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
         Button
       </button>
+      <button onClick={() => {getPlaylists('long'); console.log('long term!')}}>Long Term</button>
+      <button onClick={() => {getPlaylists('medium'); console.log('medium term!')}}>Medium Term</button>
+      <button onClick={() => {getPlaylists('short'); console.log('short term!')}}>Short Term</button>
       <div className="container mx-auto p-4">
         <div className="grid grid-cols-3 gap-4">
           {playlists.map((playlist: any) => {
@@ -78,9 +86,6 @@ const Playlist = () => {
                 <h1 className="text-white text-lg font-bold">
                   {playlist.name}
                 </h1>
-                {/* <h2 className="text-gray-400 text-sm">
-                  {playlist.description}
-                </h2> */}
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"

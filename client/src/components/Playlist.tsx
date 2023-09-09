@@ -3,8 +3,10 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 import NavBar from './NavBar';
+import PlaylistTile from './PlaylistTile';
 
 type TimeRange = 'short' | 'medium' | 'long';
+
 
 const Playlist = () => {
   const initialCookieValue = Cookies.get('spotify_access_token');
@@ -67,44 +69,53 @@ const Playlist = () => {
   return (
     <>
       <NavBar />
-      <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-        Button
-      </button>
-      <button onClick={() => {getPlaylists('long'); console.log('long term!')}}>Long Term</button>
-      <button onClick={() => {getPlaylists('medium'); console.log('medium term!')}}>Medium Term</button>
-      <button onClick={() => {getPlaylists('short'); console.log('short term!')}}>Short Term</button>
-      <div className="container mx-auto p-4">
-        <div className="grid grid-cols-3 gap-4">
-          {playlists.map((playlist: any) => {
-            return (
-              <div className="bg-gray-800 rounded-lg p-4">
-                <img
-                  src={playlist.images[0].url}
-                  alt=""
-                  className="rounded-lg"
+      <div className='ml-20'>
+        <h1 className=' text-2xl font-bold'>Playlists</h1>
+        <div className='flex flex-row'>
+          <button
+            className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
+            onClick={() => getPlaylists('short')}
+          >
+            Short Term
+          </button>
+          <button
+            className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
+            onClick={() => getPlaylists('medium')}
+          >
+            Medium Term
+          </button>
+          <button
+            className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
+            onClick={() => getPlaylists('long')}
+          >
+            Long Term
+          </button>
+
+          <button
+            className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
+            onClick={handleTransfer}
+          >
+            Transfer
+          </button>
+          </div>
+          <div className='flex flex-col'>
+            <ul>
+              {playlists.map((playlist: any, id: number) => (
+                <PlaylistTile
+                  key={id}
+                  playlistId={playlist.id}
+                  playlistName={playlist.name}
+                  playlistDescription={playlist.description}
+                  playlistImage={playlist.images[0].url}
+                  handleCheck={handleToggleChange}
+                  isChecked={playlistIds.includes(playlist.id)}
                 />
-                <h1 className="text-white text-lg font-bold">
-                  {playlist.name}
-                </h1>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="sr-only peer"
-                    onChange={(e) =>
-                      handleToggleChange(playlist.id, e.target.checked)
-                    }
-                  />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                    {playlistIds.includes(playlist.id)
-                      ? 'Remove Playlist'
-                      : 'Transfer Playlist'}
-                  </span>
-                </label>
-              </div>
-            );
-          })}
-        </div>
+              ))}
+            </ul>
+
+            </div>
+          
+
       </div>
     </>
   );

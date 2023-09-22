@@ -10,11 +10,12 @@ Python
 
 ## Getting Started
 
-Clone the repository
+- Clone the repository
 
 - Start the client
 
 > cd client
+>
 > npm start
 
 

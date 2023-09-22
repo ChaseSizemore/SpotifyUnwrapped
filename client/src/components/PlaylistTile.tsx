@@ -1,28 +1,37 @@
 
 import React from "react";
 
-const PlaylistTile = (props: any) => {
-    return (
-        <li className='flex flex-row justify-between items-center my-2'>
-            <div className='flex flex-row items-center'>
-                <img
-                    className='w-16 h-16 rounded-full'
-                    src={props.playlistImage}
-                    alt='playlist cover'
-                />
-                <div className='ml-5'>
-                    <h1 className='text-lg font-bold'>{props.playlistName}</h1>
-                    <h2 className='text-sm'>{props.playlistDescription}</h2>
-                </div>
-            </div>
-            <input
-                className='mx-5'
-                type='checkbox'
-                checked={props.isChecked}
-                onChange={() => props.handleCheck(props.playlistId)}
-            />
-        </li>
-    );
-};
+import ImageListItem from '@mui/material/ImageListItem';
+import ImageListItemBar from '@mui/material/ImageListItemBar';
+import IconButton from '@mui/material/IconButton';
+import InfoIcon from '@mui/icons-material/Info';
 
+
+interface PlaylistTileProps {
+    key: string;
+    playlistName: string;
+    playlistArt: string;
+    playlistID: string;
+}
+
+const PlaylistTile: React.FC<PlaylistTileProps> = ({ key, playlistName, playlistArt, playlistID }) => {
+    return (
+        <>
+            <ImageListItem key={key}>
+                <img src={playlistArt} alt={playlistName} />
+                <ImageListItemBar
+                    title={playlistName}
+                    actionIcon={
+                        <IconButton
+                            sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
+                            aria-label={`info about ${playlistName}`}
+                        >
+                            <InfoIcon />
+                        </IconButton>
+                    }
+                />
+            </ImageListItem>
+        </>
+    );
+}
 export default PlaylistTile;

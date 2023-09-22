@@ -1,26 +1,42 @@
 import React from 'react';
 
-const ArtistTile = (props: any) => {
-  return (
-    <div className="flex items-center justify-center text-gray-800 p-2">
-      <div className="flex flex-wrap justify-center w-full">
-        <div className="flex items-center p-4 bg-white rounded max-w-md w-full">
-          <div className="flex flex-shrink-0 items-center justify-center h-12 sm:h-16 w-12 sm:w-16 rounded">
-            <img className="object-cover object-center rounded" src={props.image} alt={props.name} />
-          </div>
-          <div className="flex-grow flex flex-col ml-4">
-            <span className="text-sm sm:text-lg lg:text-xl font-bold">{props.artist}</span>
-            <div className="flex items-center justify-between">
-              <span className="text-xs sm:text-sm lg:text-base text-gray-500">{props.genres}</span>
-              <span className="text-green-500 text-xs sm:text-sm lg:text-base font-semibold ml-2">
-                {props.id}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+import ImageListItem from '@mui/material/ImageListItem';
+import ImageListItemBar from '@mui/material/ImageListItemBar';
+import IconButton from '@mui/material/IconButton';
+import InfoIcon from '@mui/icons-material/Info';
+import { styled } from '@mui/system';
 
+
+interface ArtistTileProps {
+  key: string;
+  artistName: string;
+  artistArt: string;
+}
+
+const StyledImg = styled('img')({
+  objectFit: 'cover',
+  width: '100%',
+  height: '100%',
+});
+
+const ArtistTile: React.FC<ArtistTileProps> = ({ key, artistName, artistArt }) => {
+  return (
+    <>
+      <ImageListItem key={key}>
+        <StyledImg src={artistArt} alt={artistName} />
+        <ImageListItemBar
+          title={artistName}
+          actionIcon={
+            <IconButton
+              sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
+              aria-label={`info about ${artistName}`}
+            >
+              <InfoIcon />
+            </IconButton>
+          }
+        />
+      </ImageListItem>
+    </>
+  );
+}
 export default ArtistTile;

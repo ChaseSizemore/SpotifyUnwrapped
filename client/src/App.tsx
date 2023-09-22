@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import Login from './components/Login';
 import Playlists from './components/Playlist';
-import Main from './components/Main';
 import Profile from './components/Profile';
 import Songs from './components/Songs';
 import Artists from './components/Artists';

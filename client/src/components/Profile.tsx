@@ -36,7 +36,6 @@ const Profile = () => {
         },
       });
       const data = await response.json();
-      console.log(data);
       setProfile({
         display_name: data.display_name,
         followers: data.followers,

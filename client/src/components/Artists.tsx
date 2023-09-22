@@ -1,48 +1,84 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from 'react';
 
-import NavBar from "./NavBar";
-import Cookies from "js-cookie";
+import ImageList from '@mui/material/ImageList';
+import ListSubheader from '@mui/material/ListSubheader';
+import ImageListItem from '@mui/material/ImageListItem';
 
-const Artists  = () => {
+import NavBar from './NavBar';
+import Cookies from 'js-cookie';
 
-    const initialCookieValue = Cookies.get('spotify_access_token');
-    const [cookie, setCookie] = useState<string | undefined>(initialCookieValue);
-    const [artists, setArtists] = useState<any>({
-        display_name: '',
-        followers: {total: 0},
-        images: [],
-    });
+import axios from 'axios';
 
-    const getArtists = async () => {
-        try {
-            const response = await fetch('https://api.spotify.com/v1/me/top/artists', {
-                headers: {
-                    Authorization: `Bearer ${cookie}`,
-                },
-            });
-            const data = await response.json();
-            console.log(data);
-            setArtists({
-                display_name: data.display_name,
-                followers: data.followers,
-                images: data.images,
-                country: data.country,
-                product: data.product,
-            });
-        } catch (error) {
-            console.error(error);
-        }
+import ArtistTile from './ArtistTile';
+
+type TimeRange = 'short' | 'medium' | 'long';
+
+const Artists = () => {
+  const initialCookieValue = Cookies.get('spotify_access_token');
+  const [cookie, setCookie] = useState<string | undefined>(initialCookieValue);
+  const [artists, setArtists] = useState<any>(null);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
     };
-    return (
-        <>
-            <NavBar />
-            <div className="ml-20">
-                <h1 className="text-2xl font-bold">Artists</h1>
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
+  const getRequestURL = (length: TimeRange): string => {
+    const timeRanges: Record<TimeRange, string> = {
+      short: 'short_term',
+      medium: 'medium_term',
+      long: 'long_term',
+    };
+    const baseUrl = 'https://api.spotify.com/v1/me/top/artists?limit=50';
+    const timeRange = timeRanges[length];
+    return timeRange ? `${baseUrl}&time_range=${timeRange}` : baseUrl;
+  };
 
-            </div>
-        </>
-    );
+  const getTopArtists = async (length: TimeRange) => {
+    const requestURL = getRequestURL(length);
+    try {
+      const response = await axios.get(requestURL, {
+        headers: { Authorization: `Bearer ${cookie}` },
+      });
+      setArtists(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+    useEffect(() => {
+        getTopArtists('medium');
+    }, [cookie]);
+
+  return (
+    <>
+      <NavBar />
+      <div className={windowWidth >= 600 ? 'ml-20 mt-20' : 'mt-20'}>
+        <h1 className=" text-2xl font-bold">Top Artists</h1>
+        <ImageList cols={4}>
+          <ImageListItem key="Subheader" cols={4}>
+            <ListSubheader className="cursor-pointer" onClick={() => getTopArtists('long')}>Full</ListSubheader>
+            <ListSubheader className="cursor-pointer" onClick={() => getTopArtists('medium')}>6 Months</ListSubheader>
+            <ListSubheader className="cursor-pointer" onClick={() => getTopArtists('short')}>4 Weeks</ListSubheader>
+          </ImageListItem>
+          {artists?.items.map((artist: any) => (
+            <ArtistTile
+              key={artist.id}
+              artistName={artist.name}
+              artistArt={artist.images[0].url}
+            />
+          ))}
+        </ImageList>
+      </div>
+    </>
+  );
 };
 
 export default Artists;

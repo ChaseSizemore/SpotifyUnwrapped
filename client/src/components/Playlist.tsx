@@ -2,120 +2,62 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
+import ImageList from '@mui/material/ImageList';
+import ListSubheader from '@mui/material/ListSubheader';
+import ImageListItem from '@mui/material/ImageListItem';
+
 import NavBar from './NavBar';
 import PlaylistTile from './PlaylistTile';
-
-type TimeRange = 'short' | 'medium' | 'long';
-
 
 const Playlist = () => {
   const initialCookieValue = Cookies.get('spotify_access_token');
   const [cookie, setCookie] = useState<string | undefined>(initialCookieValue);
-  const [playlists, setPlaylists] = useState([]);
-  const [playlistIds, setPlaylistIds] = useState<any>([]); //This state stores all selected playlist ids ot be transfered. functionality is currently down due to soundcloud API
+  const [playlists, setPlaylists] = useState<any>(null);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  const getRequestURL = (length: TimeRange): string => {
-    const timeRanges: Record<TimeRange, string> = {short: 'short_term', medium: 'medium_term', long: 'long_term',};
-    const baseUrl = 'https://api.spotify.com/v1/me/playlists?limit=50';
-    const timeRange = timeRanges[length];
-    return timeRange ? `${baseUrl}&time_range=${timeRange}` : baseUrl;
-  };
+  useEffect(() => {
+    const handleResize = () => {setWindowWidth(window.innerWidth)};
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => { window.removeEventListener('resize', handleResize)};
+  }, []);
 
-  const getPlaylists = async (length: TimeRange) => {
-    const requestURL = getRequestURL(length);
-    console.log(requestURL)
-
+  const getPlaylists = async () => {
     try {
-      const response = await axios.get(requestURL, {
-        headers: {Authorization: `Bearer ${cookie}`,},
-      });
-      console.log('response:', response);
-      console.log('request:', response.data);
-      setPlaylists(response.data.items);
-    } catch (error) {
-      console.error(error);
+      const response = await axios.get(
+        'https://api.spotify.com/v1/me/playlists',
+        {
+          headers: {
+            Authorization: `Bearer ${cookie}`,
+          },
+        }
+      );
+      setPlaylists(response.data);
+      console.log(response.data)
+    } catch (err) {
+      console.log(err);
     }
   };
-  const addPlaylistId = (id: string): void => {
-    setPlaylistIds([...playlistIds, id]);
-  };
-  const removePlaylistId = (id: string): void => {
-    const newPlaylistIds = playlistIds.filter((playlistId: string) => {
-      return playlistId !== id;
-    });
-    setPlaylistIds(newPlaylistIds);
-  };
-  const handleToggleChange = (id: string, isChecked: boolean): void => {
-    console.log(id, isChecked);
-    if (isChecked) {
-      addPlaylistId(id);
-    } else {
-      removePlaylistId(id);
-    }
-  };
-  const handleTransfer = async () => {};
 
   useEffect(() => {
-    console.log(playlistIds);
-    console.log('in use effect - playlist ID')
-  }, [playlistIds]);
-
-  useEffect(() => {
-    if (cookie) {
-      console.log('in use effect - cookie')
-      getPlaylists('medium');
-    }
+    getPlaylists();
   }, [cookie]);
   return (
     <>
       <NavBar />
-      <div className='ml-20'>
-        <h1 className=' text-2xl font-bold'>Playlists</h1>
-        <div className='flex flex-row'>
-          <button
-            className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
-            onClick={() => getPlaylists('short')}
-          >
-            Short Term
-          </button>
-          <button
-            className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
-            onClick={() => getPlaylists('medium')}
-          >
-            Medium Term
-          </button>
-          <button
-            className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
-            onClick={() => getPlaylists('long')}
-          >
-            Long Term
-          </button>
+      <div className={windowWidth >= 600 ? "ml-20 mt-20" : "mt-20"}>
+        <h1 className=" text-2xl font-bold">Top Tracks</h1>
+        <ImageList cols={4}>
+          {playlists?.items.map((playlist: any) => (
+            <PlaylistTile
+              key={playlist.id}
+              playlistName={playlist.name}
+              playlistArt={playlist.images[0].url}
+              playlistID={playlist.id}
+            />
 
-          <button
-            className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
-            onClick={handleTransfer}
-          >
-            Transfer
-          </button>
-          </div>
-          <div className='flex flex-col'>
-            <ul>
-              {playlists.map((playlist: any, id: number) => (
-                <PlaylistTile
-                  key={id}
-                  playlistId={playlist.id}
-                  playlistName={playlist.name}
-                  playlistDescription={playlist.description}
-                  playlistImage={playlist.images[0].url}
-                  handleCheck={handleToggleChange}
-                  isChecked={playlistIds.includes(playlist.id)}
-                />
-              ))}
-            </ul>
-
-            </div>
-          
-
+          ))}
+        </ImageList>
       </div>
     </>
   );

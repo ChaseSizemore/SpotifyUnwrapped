@@ -50,14 +50,17 @@ const Songs = () => {
   return (
     <>
       <NavBar />
-      <div className={windowWidth >= 600 ? "ml-20 mt-20" : "mt-20 mx-5"}>
-        <h1 className=" text-2xl font-bold">Top Tracks</h1>
+      <div className={windowWidth >= 600 ? "ml-20" : "mt-20"}>
+        <div className='flex flex-row justify-between items-center py-5'>
+          <h1 className=" text-2xl font-bold">Top Tracks</h1>
+          <div>
+            <a className = "cursor-pointer px-2 underline" onClick={() => getTopTracks('long')}>Full</a>
+            <a className = "cursor-pointer px-2 underline" onClick={() => getTopTracks('medium')}>6 Months</a>
+            <a className = "cursor-pointer px-2 underline" onClick={() => getTopTracks('short')}>4 Weeks</a>
+
+          </div>
+        </div>
         <ImageList cols={4}>
-          <ImageListItem key="Subheader" cols={4}>
-            <ListSubheader  className = "cursor-pointer" onClick={() => getTopTracks('long')}>Full</ListSubheader>
-            <ListSubheader className = "cursor-pointer" onClick={() => getTopTracks('medium')}>6 Months</ListSubheader>
-            <ListSubheader className = "cursor-pointer" onClick={() => getTopTracks('short')}>4 Weeks</ListSubheader>
-          </ImageListItem>
           {topTracks?.items.map((track: any) => (
             <SongTile
               key={track.id}

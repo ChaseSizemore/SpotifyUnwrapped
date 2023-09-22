@@ -45,7 +45,7 @@ const Playlist = () => {
   return (
     <>
       <NavBar />
-      <div className={windowWidth >= 600 ? "ml-20 mt-20" : "mt-20"}>
+      <div className={windowWidth >= 600 ? "ml-20" : "mt-20"}>
         <h1 className=" text-2xl font-bold">Top Tracks</h1>
         <ImageList cols={4}>
           {playlists?.items.map((playlist: any) => (

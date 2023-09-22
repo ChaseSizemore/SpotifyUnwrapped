@@ -3,6 +3,7 @@ import NavBar from './NavBar';
 
 import Cookies from 'js-cookie';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 
 interface ProfileType {
@@ -29,6 +30,9 @@ const Profile = () => {
     product: '',
   });
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [topTracks, setTopTracks] = useState<any>(null);
+  const [topArtists, setTopArtists] = useState<any>(null);
+
 
   useEffect(() => {
     const handleResize = () => {setWindowWidth(window.innerWidth)};
@@ -66,12 +70,40 @@ const Profile = () => {
     }
   };
 
+  const getTopFiveSongs = async () => {
+    const requestURL = 'https://api.spotify.com/v1/me/top/tracks?limit=5&time_range=long_term';
+    try {
+      const response = await axios.get(requestURL, {
+        headers: { Authorization: `Bearer ${cookie}` },
+      });
+      console.log(response.data.items);
+      setTopTracks(response.data.items);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getTopFiveArtists = async () => {
+    const requestURL = 'https://api.spotify.com/v1/me/top/artists?limit=5&time_range=long_term';
+    try {
+      const response = await axios.get(requestURL, {
+        headers: { Authorization: `Bearer ${cookie}` },
+      });
+      console.log(response.data.items);
+      setTopArtists(response.data.items);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     getParamsAndSetCookie();
   }, []);
 
   useEffect(() => {
     getProfile();
+    getTopFiveSongs();
+    getTopFiveArtists();
   }, [cookie]);
 
   return (
@@ -85,6 +117,8 @@ const Profile = () => {
           <p className="text-lg mt-2">{profile.country}</p>
           <p className="text-lg mt-2">{profile.product}</p>
         </div>
+      </div>
+      <div>
       </div>
     </>
   );

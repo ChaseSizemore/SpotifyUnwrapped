@@ -8,6 +8,7 @@ import Playlists from './components/Playlist';
 import Profile from './components/Profile';
 import Songs from './components/Songs';
 import Artists from './components/Artists';
+import ErrorPage from './components/Error';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/artists" Component={Artists} />
           <Route path="/songs" Component={Songs} />
           <Route path="/playlists" Component={Playlists} />
+          <Route path="*" Component={ErrorPage} />
         </Routes>
       </Router>
     </>

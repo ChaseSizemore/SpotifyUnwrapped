@@ -12,12 +12,11 @@ Python
 
 Clone the repository
 
-Start the client
+- Start the client
 
-'
-cd client
-npm start
-'
+> cd client
+> npm start
+
 
 Start the server
 '''

@@ -13,10 +13,11 @@ Python
 Clone the repository
 
 Start the client
-'''
+
+'
 cd client
 npm start
-'''
+'
 
 Start the server
 '''

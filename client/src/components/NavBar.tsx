@@ -23,7 +23,7 @@ const NavBar: React.FC = () => {
 
   return (
     <>
-      {windowWidth < 600 ? (
+      {windowWidth < 768 ? (
         <nav className="fixed top-0 left-0 h-20 w-screen flex flex-row items-center bg-black">
           <div className="flex flex-row items-center justify-center flex-grow">
             <SideBarIcon icon={<FaUserAlt color="white" className="text-2xl" />} text="Profile" onClick={() => navigate('/main')}/>

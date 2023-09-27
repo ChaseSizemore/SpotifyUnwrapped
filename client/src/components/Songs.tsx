@@ -9,19 +9,7 @@ import { getTopTracks, TimeRange } from '../util/spotifyAPICalls';
 
 const Songs = () => {
   const [topTracks, setTopTracks] = useState<any>(null);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   useEffect(() => {
     getTopTracks('medium').then((data) => {
@@ -41,7 +29,9 @@ const Songs = () => {
   return (
     <>
       <NavBar />
-      <div className={windowWidth >= 600 ? 'ml-20' : 'mt-20'}>
+      <div
+        className={`transition-all duration-100 md:ml-40 md:mr-20 mt-20 mx-5`}
+      >
         <div className="flex flex-row justify-between items-center py-5">
           <h1 className=" text-2xl font-bold">Top Tracks</h1>
           <div>

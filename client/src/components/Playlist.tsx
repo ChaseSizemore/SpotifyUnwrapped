@@ -9,38 +9,29 @@ import { getPlaylists } from '../util/spotifyAPICalls';
 
 const Playlist = () => {
   const [playlists, setPlaylists] = useState<any>(null);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [loading, setLoading] = useState(true);  // New state for loading
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  const [loading, setLoading] = useState(true); // New state for loading
 
   useEffect(() => {
     getPlaylists().then((data) => {
       setPlaylists(data);
-      setLoading(false);  // Set loading to false once data is fetched
+      setLoading(false); // Set loading to false once data is fetched
     });
   }, []);
 
   return (
     <>
       <NavBar />
-      <div className={windowWidth >= 600 ? 'ml-20' : 'mt-20'}>
-        <h1 className=" text-2xl font-bold">Playlists</h1>
-        <ImageList 
-          cols={4} 
-          style={{ 
-            transition: 'opacity 0.5s', 
-            opacity: loading ? 0 : 1  // Adjust opacity based on loading state
-          }}>
+      <div
+        className={`transition-all duration-100 md:ml-40 md:mr-20 mt-20 mx-5`}
+      >
+        <h1 className="text-2xl font-bold">Playlists</h1>
+        <ImageList
+          cols={4}
+          style={{
+            transition: 'opacity 0.5s',
+            opacity: loading ? 0 : 1,
+          }}
+        >
           {playlists?.items.map((playlist: any) => (
             <PlaylistTile
               key={playlist.id}

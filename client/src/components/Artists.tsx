@@ -41,7 +41,7 @@ const Artists = () => {
   return (
     <>
       <NavBar />
-      <div className={windowWidth >= 600 ? 'ml-20' : 'mt-20'}>
+      <div className={`transition-all duration-100 md:ml-40 md:mr-20 mt-20 mx-5`}>
         <div className="flex flex-row justify-between items-center py-5">
           <h1 className=" text-2xl font-bold">Top Artists</h1>
           <div>

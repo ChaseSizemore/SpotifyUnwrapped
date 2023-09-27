@@ -1,3 +1,7 @@
+'''
+test
+'''
+
 import os
 import base64
 from urllib.parse import urlencode
@@ -81,7 +85,10 @@ def callback():
         + base64.b64encode(f"{client_id}:{client_secret}".encode()).decode()
     }
     res = requests.post(
-        "https://accounts.spotify.com/api/token", data=auth_data, headers=headers, timeout=10
+        "https://accounts.spotify.com/api/token",
+        data=auth_data,
+        headers=headers,
+        timeout=10,
     )
     access_token = res.json().get("access_token")
     redirect_url = os.getenv("FRONTEND_URI", "http://localhost:3000/main")

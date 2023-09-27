@@ -62,7 +62,7 @@ def login():
     query_parameters = {
         "response_type": "code",
         "client_id": client_id,
-        "scope": "user-read-private user-read-email user-library-read user-top-read playlist-read-private playlist-read-collaborative",
+        "scope": "user-read-private user-read-email user-library-read user-top-read user-follow-read playlist-read-private playlist-read-collaborative",
         "redirect_uri": redirect_uri,
     }
     url = "https://accounts.spotify.com/authorize?" + urlencode(query_parameters)

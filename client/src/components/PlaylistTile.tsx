@@ -26,7 +26,7 @@ const PlaylistTile: React.FC<PlaylistTileProps> = ({ key, playlistName, playlist
                             sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
                             aria-label={`info about ${playlistName}`}
                         >
-                            <InfoIcon />
+                            {/* <InfoIcon /> */}
                         </IconButton>
                     }
                 />

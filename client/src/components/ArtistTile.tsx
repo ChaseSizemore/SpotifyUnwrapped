@@ -31,7 +31,7 @@ const ArtistTile: React.FC<ArtistTileProps> = ({ key, artistName, artistArt }) =
               sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
               aria-label={`info about ${artistName}`}
             >
-              <InfoIcon />
+              {/* <InfoIcon /> */}
             </IconButton>
           }
         />

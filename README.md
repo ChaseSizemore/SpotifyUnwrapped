@@ -3,11 +3,10 @@
 ## Description
 A website providing Spotify Wrapped data year-round (Will transfer playlists between websites soon)
 
-
 ## Requirements
 Node.js and Python
 
-## Getting Started
+## Getting Started on localhost
 
 - Clone the repository
 
@@ -20,17 +19,17 @@ Node.js and Python
 
 - And a .env in the client directory for the frontend with the following variables:
 
-> REACT_APP_AUTH_URL
+> REACT_APP_AUTH_URL = 
 
 
-- Start the client
+- Start the client side
 
 > cd client
 >
 > npm start
 
 
-- Start the server
+- Start the server side
 
 > cd backend
 >

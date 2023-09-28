@@ -77,7 +77,7 @@ const Profile = () => {
       .catch(() => {
         setLoading(false);
       });
-  }, [cookie]);
+  }, []);
 
   return (
     <>

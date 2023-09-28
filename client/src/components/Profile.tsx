@@ -71,15 +71,11 @@ const Profile = () => {
         setNumArtists(numArtists);
         setNumPlaylists(numSongs);
         setTimeout(() => {
-          console.log('test')
-          console.log(profileData);
-          console.log(songsData);
-
           setLoading(false);
         }, 1000);
       })
       .catch(() => {
-        setLoading(false); // Handle the error as per your needs.
+        setLoading(false);
       });
   }, [cookie]);
 
@@ -124,12 +120,6 @@ const Profile = () => {
                 profile.product.slice(1)}
             </span>
             <div className="flex mt-4 space-x-3 md:mt-6">
-              <a
-                href="#"
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700"
-              >
-                Message
-              </a>
               <a
                 href="#"
                 onClick={() => {

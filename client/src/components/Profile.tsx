@@ -2,43 +2,24 @@ import React, { useEffect, useState } from 'react';
 import NavBar from './NavBar';
 import Cookies from 'js-cookie';
 import { useLocation } from 'react-router-dom';
-import {
-  ProfileType,
-  getProfile,
-  getTopFiveSongs,
-  getTopFiveArtists,
-  getNumArtists,
-  getNumPlaylists,
-  logout,
-} from '../util/spotifyAPICalls';
+import { ProfileType, getProfile, getNumArtists, getNumPlaylists, logout, getTopGenres,} from '../util/spotifyAPICalls';
 
 const Profile = () => {
   const location = useLocation();
   const initialCookieValue = Cookies.get('spotify_access_token');
   const [cookie, setCookie] = useState<string | undefined>(initialCookieValue);
   const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState<ProfileType>({
-    display_name: '',
-    followers: { total: 0 },
-    images: [],
-    country: '',
-    product: '',
-  });
+  const [profile, setProfile] = useState<ProfileType>({ display_name: '', followers: { total: 0 }, images: [], country: '', product: '',});
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [topTracks, setTopTracks] = useState<any>(null);
-  const [topArtists, setTopArtists] = useState<any>(null);
   const [numArtists, setNumArtists] = useState<any>(null);
   const [numPlaylists, setNumPlaylists] = useState<number>(0);
+  const [topGenres, setTopGenres] = useState<any>(null);
 
   useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
+    const handleResize = () => {setWindowWidth(window.innerWidth);};
     window.addEventListener('resize', handleResize);
     handleResize();
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+    return () => {window.removeEventListener('resize', handleResize);};
   }, []);
 
   const getParamsAndSetCookie = () => {
@@ -55,29 +36,19 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    setLoading(true);
+    Promise.all([ getProfile(), getNumArtists(), getNumPlaylists(), getTopGenres(),])
+        .then(([profileData, numArtists, numSongs, genres]) => { 
+            setProfile(profileData);
+            setNumArtists(numArtists);
+            setNumPlaylists(numSongs);
+            setTopGenres(genres);
+            setLoading(false);
+        })
+        .catch(() => {
+            setLoading(false);
+        });
+}, []); // Empty dependency array to run this effect only once, when the component mounts
 
-    Promise.all([
-      getProfile(),
-      getTopFiveSongs(),
-      getTopFiveArtists(),
-      getNumArtists(),
-      getNumPlaylists(),
-    ])
-      .then(([profileData, songsData, artistsData, numArtists, numSongs]) => {
-        setProfile(profileData);
-        setTopTracks(songsData);
-        setTopArtists(artistsData);
-        setNumArtists(numArtists);
-        setNumPlaylists(numSongs);
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
-  }, []);
 
   return (
     <>

@@ -8,6 +8,8 @@ import Playlists from './components/Playlist';
 import Profile from './components/Profile';
 import Songs from './components/Songs';
 import Artists from './components/Artists';
+import Success from './components/SuccessPage';
+import TransferPage from './components/TransferPage';
 import ErrorPage from './components/Error';
 
 function App() {
@@ -20,6 +22,8 @@ function App() {
           <Route path="/artists" Component={Artists} />
           <Route path="/songs" Component={Songs} />
           <Route path="/playlists" Component={Playlists} />
+          <Route path="/success" Component={Success} />
+          <Route path="/transfer" Component={TransferPage} />
           <Route path="*" Component={ErrorPage} />
         </Routes>
       </Router>

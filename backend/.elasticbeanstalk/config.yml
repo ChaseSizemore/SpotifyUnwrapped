@@ -1,6 +1,6 @@
 branch-defaults:
   default:
-    environment: SpotifyUnwrapped-env
+    environment: null
 global:
   application_name: SpotifyUnwrapped
   branch: null

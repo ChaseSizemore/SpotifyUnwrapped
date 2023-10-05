@@ -24,7 +24,7 @@ const Playlist = () => {
       <div
         className={`transition-all duration-100 md:ml-40 md:mr-20 mt-20 mx-5`}
       >
-        <h1 className="text-2xl font-bold">Playlists</h1>
+        <h1 className="text-2xl font-bold">Top Playlists</h1>
         <ImageList
           cols={4}
           style={{

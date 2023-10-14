@@ -2,24 +2,44 @@ import React, { useEffect, useState } from 'react';
 import NavBar from './NavBar';
 import Cookies from 'js-cookie';
 import { useLocation } from 'react-router-dom';
-import { ProfileType, getProfile, getNumArtists, getNumPlaylists, logout, getTopGenres,} from '../util/spotifyAPICalls';
+import {
+  ProfileType,
+  getProfile,
+  getNumArtists,
+  getNumPlaylists,
+  logout,
+  getTopGenres,
+} from '../util/spotifyAPICalls';
+
+import spotify from '../assets/spotify.png';
+import { get } from 'http';
 
 const Profile = () => {
   const location = useLocation();
   const initialCookieValue = Cookies.get('spotify_access_token');
   const [cookie, setCookie] = useState<string | undefined>(initialCookieValue);
   const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState<ProfileType>({ display_name: '', followers: { total: 0 }, images: [], country: '', product: '',});
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [profile, setProfile] = useState<ProfileType>({
+    display_name: '',
+    followers: { total: 0 },
+    images: [],
+    country: '',
+    product: '',
+  });
+  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [numArtists, setNumArtists] = useState<any>(null);
   const [numPlaylists, setNumPlaylists] = useState<number>(0);
   const [topGenres, setTopGenres] = useState<any>(null);
 
   useEffect(() => {
-    const handleResize = () => {setWindowWidth(window.innerWidth);};
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
     window.addEventListener('resize', handleResize);
     handleResize();
-    return () => {window.removeEventListener('resize', handleResize);};
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const getParamsAndSetCookie = () => {
@@ -36,31 +56,43 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    Promise.all([ getProfile(), getNumArtists(), getNumPlaylists(), getTopGenres(),])
-        .then(([profileData, numArtists, numSongs, genres]) => { 
-            setProfile(profileData);
-            setNumArtists(numArtists);
-            setNumPlaylists(numSongs);
-            setTopGenres(genres);
-            setLoading(false);
-        })
-        .catch(() => {
-            setLoading(false);
-        });
-}, []); // Empty dependency array to run this effect only once, when the component mounts
+    Promise.all([
+      getProfile(),
+      getNumArtists(),
+      getNumPlaylists(),
+      getTopGenres(),
+    ])
+      .then(([profileData, numArtists, numSongs, genres]) => {
+        setProfile(profileData);
+        console.log(profileData);
+        setNumArtists(numArtists);
+        setNumPlaylists(numSongs);
+        setTopGenres(genres);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, [cookie]);
 
-
-  return (
-    <>
-      <NavBar />
-      <div className="flex justify-center items-center h-screen">
-        {loading ? (
+  if (!profile) {
+    return (
+      <>
+        <NavBar />
+        <div className="flex justify-center items-center h-screen">
           <div
             className={`w-16 h-16 border-t-4 border-blue-500 rounded-full animate-spin ${
               windowWidth >= 768 ? 'ml-20' : 'mt-20'
             }`}
           ></div>
-        ) : (
+        </div>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <NavBar />
+        <div className="flex justify-center items-center h-screen">
           <div
             className={`flex flex-col items-center ${
               windowWidth >= 768 ? 'ml-20' : 'mt-20'
@@ -74,7 +106,7 @@ const Profile = () => {
                 profile.images[0] &&
                 profile.images[0].url
                   ? profile.images[0].url
-                  : 'https://spotifyunwrapped.s3.amazonaws.com/spotify.png'
+                  : spotify
               }
               alt="profile picture"
             />
@@ -102,10 +134,10 @@ const Profile = () => {
               </a>
             </div>
           </div>
-        )}
-      </div>
-    </>
-  );
+        </div>
+      </>
+    );
+  }
 };
 
 export default Profile;

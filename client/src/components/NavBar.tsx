@@ -1,3 +1,8 @@
+/**
+ * Renders the NavBar displayed on all pages except the '/' route or the login page.
+ * @returns A React component that displays the Navigation Bar.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BsFillMicFill, BsMusicNoteBeamed } from 'react-icons/bs';
@@ -6,10 +11,10 @@ import { MdRecentActors } from 'react-icons/md';
 import { BiTransfer } from 'react-icons/bi';
 
 import SideBarIcon from './SideBarIcon';
+import spotify from '../assets/spotify.png'
 
 const NavBar: React.FC = () => {
-  const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,7 +42,7 @@ const NavBar: React.FC = () => {
       ) : (
         <nav className="fixed top-0 left-0 h-screen w-20 flex flex-col items-center bg-black z-99">
           <div className="flex flex-col items-center w-full pt-4">
-            <img src={'https://spotifyunwrapped.s3.amazonaws.com/spotify.png'} className="w-14"/>
+            <img src={spotify} className="w-14"/>
           </div>
           <div className="flex flex-col items-center justify-center flex-grow">
             <SideBarIcon icon={<FaUserAlt color="white" className="text-2xl" />} text="Profile" onClick={() => navigate('/main')}/>

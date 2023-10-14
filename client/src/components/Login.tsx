@@ -1,7 +1,18 @@
+/**
+ * Renders a login button that redirects the user to the Spotify authentication route (which if valid, redirects to /main (or the profile component)).
+ * @returns A React component that displays a login button.
+ */
+
 import React from 'react';
+import image from '../assets/spotify.png';
 
 
 const Login = () => {
+
+  /**
+   * Redirects the user to the Spotify authentication URL.
+   * @returns void
+   */
   const spotifyAuth = () => {
     const authURL =
       process.env.REACT_APP_AUTH_URL ||
@@ -16,7 +27,7 @@ const Login = () => {
         <div className="absolute inset-y-0 right-1/2 -z-10 mr-12 w-[150vw] origin-bottom-left skew-x-[-30deg] bg-white shadow-xl shadow-indigo-600/10 ring-1 ring-indigo-50 sm:mr-20 md:mr-0 lg:right-full lg:-mr-36 lg:origin-center" />
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
           <img
-            src={'https://spotifyunwrapped.s3.amazonaws.com/spotify.png'}
+            src={image}
             className="w-20 pb-10"
           />
           <button

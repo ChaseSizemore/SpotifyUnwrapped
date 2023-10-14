@@ -1,47 +1,72 @@
-import React, { useState, useEffect } from 'react';
+/**
+ * Renders a component that displays the user's top artists on Spotify.
+ *
+ * @returns A React component that displays the user's top artists on Spotify.
+ */
 
+import React, { useState, useEffect, useCallback } from 'react';
 import ImageList from '@mui/material/ImageList';
-
 import NavBar from './NavBar';
 import ArtistTile from './ArtistTile';
-
 import { getTopArtists, TimeRange } from '../util/spotifyAPICalls';
 
 const Artists = () => {
   const [artists, setArtists] = useState<any>(null);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [loading, setLoading] = useState(true);
 
+  const handleResize = useCallback(() => {
+    setWindowWidth(window.innerWidth);
+  }, []);
+
   useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
     window.addEventListener('resize', handleResize);
     handleResize();
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [handleResize]);
 
   useEffect(() => {
-    getTopArtists('medium').then((data) => {
-      setArtists(data);
-      setLoading(false);
-    });
+    setLoading(true);
+    getTopArtists('medium')
+      .then((data) => {
+        setArtists(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
-  const handleTimeRangeChange = (range: TimeRange) => {
+  /**
+   * Handles the change of time range and fetches the top artists based on the selected range.
+   * @param {TimeRange} range - The selected time range.
+   * @returns {void}
+   */
+  
+  const handleTimeRangeChange = (range: TimeRange): void => {
     setLoading(true);
-    getTopArtists(range).then((data) => {
-      setArtists(data);
-      setLoading(false);
-    });
+    getTopArtists(range)
+      .then((data) => {
+        setArtists(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
     <>
       <NavBar />
-      <div className={`transition-all duration-100 md:ml-40 md:mr-20 mt-20 mx-5`}>
+      <div
+        className={`transition-all duration-100 md:ml-40 md:mr-20 mt-20 mx-5`}
+      >
         <div className="flex flex-row justify-between items-center py-5">
           <h1 className=" text-2xl font-bold">Top Artists</h1>
           <div>

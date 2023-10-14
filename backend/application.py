@@ -1,20 +1,3 @@
-"""
-This is a Flask backend for the Spotify Unwrapped application. It handles user authentication and
-authorization with Spotify and Google OAuth. The backend provides the following routes:
-
-- /: Returns a simple message indicating that the Spotify Unwrapped API is running.
-- /login: Redirects the user to the Spotify authorization URL.
-- /callback: Handles the callback from Spotify after the user has authorized the application.
-- /googlelogin: Redirects the user to the Google login page for authentication.
-- /logout: Logs out the user by removing their YouTube token from the session.
-- /oauth2callback: Authorizes the user to access the YouTube API and stores the access 
-    token in the session.
-
-The backend also loads environment variables from a .env file
- and uses them to configure the Spotify and Google OAuth clients.
- The backend runs on port 8000 by default, but this can be configured using the PORT 
-    environment variable.
-"""
 
 import os
 import base64

@@ -1,4 +1,10 @@
+'''
+NOTE: When deploying to AWS, change app --> application
+      When deploying to Vercel, change application --> app
 
+        This is because AWS Elastic Beanstalk looks for a file called application.py
+        and Vercel looks for app = Flask(__name__)
+'''
 import os
 import base64
 from urllib.parse import urlencode
@@ -11,21 +17,21 @@ from authlib.integrations.flask_client import OAuth
 
 dotenv.load_dotenv()
 
-application = Flask(__name__)
-application.debug = True
+app = Flask(__name__)
+app.debug = True
 
-application.config['SESSION_TYPE'] = 'filesystem'  # use filesystem as session storage. Other storages can be 'redis', 'memcached', etc.
-Session(application)
+app.config['SESSION_TYPE'] = 'filesystem'  # use filesystem as session storage. Other storages can be 'redis', 'memcached', etc.
+Session(app)
 
 
 
 CORS(
-    application,
+    app,
     resources={
         r"/*": {
             "origins": [
                 "http://localhost:3000",
-                "http://spotifyunwrapped.s3-website-us-east-1.amazonaws.com/",
+                "https://spotify-unwrapped-backend.vercel.app/",
             ]
         }
     },
@@ -38,12 +44,16 @@ client_id = os.getenv("SPOTIFY_CLIENT_ID")
 client_secret = os.getenv("SPOTIFY_CLIENT_SECRET")
 
 
-@application.route("/", methods=["GET"])
+@app.route("/", methods=["GET"])
 def home():
     return "Spotify Unwrapped API"
 
+@app.route("/test", methods=["GET"])
+def test():
+    return "Test"
 
-@application.route("/login", methods=["GET"])
+
+@app.route("/login", methods=["GET"])
 def login():
     """
     Redirects the user to the Spotify authorization URL.
@@ -60,10 +70,10 @@ def login():
     return redirect(url)
 
 
-@application.route("/callback", methods=["GET"])
+@app.route("/callback", methods=["GET"])
 def callback():
     """
-    Handles the callback from Spotify after the user has authorized the application.
+    Handles the callback from Spotify after the user has authorized the app.
     """
     code = request.args.get("code")
     auth_data = {
@@ -90,12 +100,12 @@ def callback():
 
 # <-------------- Google OAuth Routes -------------->
 
-application.secret_key = os.getenv("FLASK_SECRET_KEY")
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
 oauth = OAuth()
-oauth.init_app(application)
-application.config['SESSION_COOKIE_SECURE'] = True
-application.config['SESSION_COOKIE_HTTPONLY'] = True
-application.secret_key = os.getenv("FLASK_SECRET_KEY")
+oauth.init_app(app)
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 YOUTUBE_API_URL = "https://www.googleapis.com/youtube/v3"
 
@@ -116,7 +126,7 @@ google = oauth.register(
 )
 
 
-@application.route("/googlelogin")
+@app.route("/googlelogin")
 def google_login():
     """
     Redirects the user to the Google OAuth2 login page with the specified scope.
@@ -128,7 +138,7 @@ def google_login():
     return google.authorize_redirect(redirect_uri2)
 
 
-@application.route("/googlecallback")
+@app.route("/googlecallback")
 def google_callback():
     token = oauth.google.authorize_access_token()
     session["google_access_token"] = token["access_token"]
@@ -138,29 +148,29 @@ def google_callback():
     return response
 
 
-@application.route("/create-youtube-playlist", methods=["POST"])
-def create_youtube_playlist():
-    token = session.get("google_access_token")
-    if not token:
-        return jsonify({"error": "Token not found"}), 401
-    print( "IN CREATE PLAYLIST", token)
+# @app.route("/create-youtube-playlist", methods=["POST"])
+# def create_youtube_playlist():
+#     token = session.get("google_access_token")
+#     if not token:
+#         return jsonify({"error": "Token not found"}), 401
+#     print( "IN CREATE PLAYLIST", token)
 
-    data = request.get_json()
-    playlist_name = data["playlist_name"]
-    playlist_description = data["playlist_description"]
-    playlist_songs = data["songs"]
+#     data = request.get_json()
+#     playlist_name = data["playlist_name"]
+#     playlist_description = data["playlist_description"]
+#     playlist_songs = data["songs"]
 
-    print(playlist_name)
-    print(playlist_description)
-    print(playlist_songs)
-    response = Response("Success")
-    response.headers.add("Access-Control-Allow-Origin", "http://localhost:3000")
-    response.headers.add("Access-Control-Allow-Headers", "Content-Type")
-    response.headers.add("Access-Control-Allow-Methods", "POST")
-    return response
+#     print(playlist_name)
+#     print(playlist_description)
+#     print(playlist_songs)
+#     response = Response("Success")
+#     response.headers.add("Access-Control-Allow-Origin", "http://localhost:3000")
+#     response.headers.add("Access-Control-Allow-Headers", "Content-Type")
+#     response.headers.add("Access-Control-Allow-Methods", "POST")
+#     return response
 
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", "8000"))
     print(f"Listening on port {port} ")
-    application.run(port=port, host="localhost")
+    app.run(port=port, host="localhost")

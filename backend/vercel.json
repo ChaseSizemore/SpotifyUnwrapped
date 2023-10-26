@@ -1,14 +1,15 @@
 {
+    "name": "spotify-unwrapped-backend",
     "builds": [
         {
-            "src": "application.py",
+            "src": "/application.py",
             "use": "@vercel/python"
         }
     ],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "application.py"
+            "dest": "/application.py"
         }
     ]
 }

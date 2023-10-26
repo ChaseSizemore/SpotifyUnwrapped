@@ -16,7 +16,7 @@ const Login = () => {
   const spotifyAuth = () => {
     const authURL =
       process.env.REACT_APP_AUTH_URL ||
-      'http://spotifyunwrapped-env.eba-fnpwcr3p.us-east-1.elasticbeanstalk.com/login';
+      'https://spotify-unwrapped-backend.vercel.app/login';
     window.location.replace(authURL);
   };
 

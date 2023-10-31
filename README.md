@@ -1,10 +1,15 @@
 # SpotifyUnwrapped
 
 ## Description
-A website providing Spotify Wrapped data year-round (Will transfer playlists between websites soon)
+A website providing Spotify Wrapped data year-round
 
-## Requirements
-Node.js and Python
+## Technology Used
+- Python (Flask)
+- JavaScript/TypeScript (React + React Router)
+- TailwindCSS + Material UI
+- OAuth 2 (Spotify OAuth + Google OAuth)
+- Spotify API
+- AWS EB + AWS S3 + CI/CD
 
 ## Getting Started on localhost
 
@@ -34,3 +39,8 @@ Node.js and Python
 > cd backend
 >
 > python3 application.py
+
+
+## TO DO
+- Profile page data rendering bug as a result of cookie
+- Transfer playlsit functionality

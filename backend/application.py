@@ -9,7 +9,7 @@ import os
 import base64
 from urllib.parse import urlencode
 import requests
-from flask import Flask, redirect, request, make_response, session, url_for, jsonify, Response
+from flask import Flask, redirect, request, make_response, session, url_for
 from flask_session import Session
 from flask_cors import CORS
 import dotenv
